@@ -1,8 +1,23 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
+import StockList, {Arz,  fetchArz} from "~/pages/api/arz/arz";
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const [arzList, setJsonArray] = useState<Arz[]>([]);
+
+  useEffect(() => {
+
+    const fillData = async () => {
+      const data: Arz[] = await  fetchArz();
+      setJsonArray(data);
+    }
+
+    fillData();
+    console.log(arzList);
+
+  }, []); 
 
   return (
     <>
@@ -12,23 +27,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main >
-        {
-          hello.data ? 
-             (
-              <h1>
-                {hello.data.greeting}
-              </h1>
-            )
-             : 
-          
-             (
-              <h1>
-                hello.data
-              </h1>
-            )
-            
-        }
-
+        <StockList />
       </main>
     </>
   );
