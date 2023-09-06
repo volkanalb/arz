@@ -15,15 +15,15 @@ interface Arz {
 function StockList() {
   const [jsonArray, setJsonArray] = useState<Arz[]>([]);
 
-  useEffect(() => {
-
-    const fillData = async () => {
-      const data: Arz[] = await fetchData();
+  function fillData() { 
+    fetchData().then((data) => {
       setJsonArray(data);
-    }
-
+    }, (error) => {
+      console.log(error);
+    });
+  }
+  useEffect(() => {
     fillData();
-
   }, []);
 
   return (
@@ -64,12 +64,12 @@ function StockList() {
 
 async function fetchData(): Promise<Arz[]> {
   try {
-    const url: string = 'https://raw.githubusercontent.com/volkanalb/Halka-Arz/main/arz.json';
+    const url = 'https://raw.githubusercontent.com/volkanalb/Halka-Arz/main/arz.json';
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    const data: Arz[] = await response.json();
+    const data: Arz[] = await response.json() as Arz[];
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
